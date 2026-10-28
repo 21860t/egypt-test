@@ -1,0 +1,239 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Тест «Древний Египет»</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Golos+Text:wght@400;500;600;700&display=swap">
+<style>body{margin:0}
+/* Layout: single reading column; sticky progress band; sections of numbered questions; result panel at top after check */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --fg:#1b2333; --muted:#5d6779; --line:#d8dee8;
+  --lapis:#1f4fa0; --lapis-soft:#e4ecfa; --gold:#b8862b; --gold-soft:#f6ecd6;
+  --ok:#1f7a4d; --ok-soft:#e1f3e9; --bad:#b3362b; --bad-soft:#fbe6e3;
+  --display:"Prata",Georgia,"Times New Roman",serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1420; --surface:#171e2d; --fg:#e6eaf2; --muted:#9aa4b6; --line:#2a3447;
+  --lapis:#7ea6ec; --lapis-soft:#1c2a47; --gold:#e0b45c; --gold-soft:#3a2f17;
+  --ok:#6fcf9b; --ok-soft:#143225; --bad:#f08b80; --bad-soft:#3c1c1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1420; --surface:#171e2d; --fg:#e6eaf2; --muted:#9aa4b6; --line:#2a3447;
+  --lapis:#7ea6ec; --lapis-soft:#1c2a47; --gold:#e0b45c; --gold-soft:#3a2f17;
+  --ok:#6fcf9b; --ok-soft:#143225; --bad:#f08b80; --bad-soft:#3c1c1a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+header.hero{display:grid;gap:10px;padding-block:8px 20px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(28px,6vw,40px);line-height:1.15;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:0;max-width:62ch}
+.namebox{display:grid;gap:6px;margin-top:8px}
+.namebox label{font-size:14px;font-weight:600}
+.namebox input{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);max-width:360px;width:100%}
+.namebox input:focus-visible{outline:2px solid var(--lapis);outline-offset:1px}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px}
+.bar-in{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.track{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.fill{height:100%;width:0;background:var(--lapis);transition:width .25s}
+.count{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+h2{font-family:var(--display);font-weight:400;font-size:22px;margin:36px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--gold-soft);color:var(--fg)}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px;display:grid;gap:10px}
+.q-head{display:flex;gap:10px;align-items:baseline}
+.num{font-family:var(--display);color:var(--lapis);font-size:18px;min-width:28px;font-variant-numeric:tabular-nums}
+.q-text{font-weight:600;margin:0}
+.hint{font-size:13px;color:var(--gold);font-weight:500;margin-left:38px}
+.opts{display:grid;gap:6px;margin-left:38px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line);border-radius:8px;cursor:pointer;transition:background .15s,border-color .15s}
+.opt:hover{border-color:var(--lapis)}
+.opt input{margin-top:4px;accent-color:var(--lapis);flex:none}
+.opt .l{font-weight:600;color:var(--muted);min-width:20px}
+.opt.sel{background:var(--lapis-soft);border-color:var(--lapis)}
+.opt.right{background:var(--ok-soft);border-color:var(--ok)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.checked .opt{cursor:default}
+.verdict{margin-left:38px;font-size:14px;font-weight:600}
+.verdict.ok{color:var(--ok)} .verdict.no{color:var(--bad)}
+.q.no{border-color:var(--bad)}
+@media (max-width:480px){.opts,.hint,.verdict{margin-left:0}}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:24px}
+button{font:inherit;font-weight:600;border-radius:8px;padding:11px 18px;cursor:pointer;border:1px solid var(--lapis)}
+.primary{background:var(--lapis);color:var(--surface)}
+.ghost{background:transparent;color:var(--lapis)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.warn{color:var(--bad);font-size:14px;margin:0}
+
+.result{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:10px;padding:20px;display:grid;gap:12px;margin-bottom:8px}
+.score{font-family:var(--display);font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.score small{font-size:20px;color:var(--muted)}
+.result p{margin:0}
+.mist{font-size:14px;color:var(--muted)}
+.copied{font-size:14px;color:var(--ok)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head><body><div class="bar"><div class="bar-in">
+  <div class="track"><div class="fill" id="fill"></div></div>
+  <span class="count" id="count">0 из 50</span>
+</div></div>
+
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">История · 5 класс</span>
+    <h1>Древний Египет</h1>
+    <p class="lead">50 вопросов по учебнику. У каждого задания написано, сколько ответов выбрать. За полностью правильный ответ — 1 балл. Если ответов несколько, нужно отметить все правильные и не выбирать лишние.</p>
+    <div class="namebox">
+      <label for="who">Имя и фамилия</label>
+      <input id="who" type="text" autocomplete="name" placeholder="Например, Иванова Мария">
+    </div>
+  </header>
+
+  <section id="result" hidden></section>
+  <form id="quiz" novalidate></form>
+
+  <div class="actions" id="actions">
+    <button type="button" class="primary" id="check">Проверить ответы</button>
+    <p class="warn" id="warn" hidden></p>
+  </div>
+</div>
+
+<script>
+const S=[
+["Природа и занятия населения",[
+["В какой части Африки находился Древний Египет?",["В Южной Африке","В Северо-Восточной Африке","В Западной Африке"],"Б"],
+["На берегах какой реки возникла древнеегипетская цивилизация?",["Евфрат","Тигр","Нил"],"В"],
+["В какое море впадает Нил?",["В Средиземное","В Красное","В Чёрное"],"А"],
+["Что такое дельта Нила?",["Узкая долина у истока реки","Область у устья, где река разделяется на рукава","Пустыня вдоль берега реки"],"Б"],
+["Почему египтяне называли свою страну «Чёрной землёй»?",["В стране добывали много угля","Землю покрывал пепел вулканов","Нильский ил образовывал тёмную плодородную почву"],"В"],
+["Чем разливы Нила были полезны земледельцам?",["Увлажняли почву","Защищали поля от всех вредителей","Оставляли плодородный ил","Избавляли людей от необходимости обрабатывать землю"],"АВ"],
+["Для чего египтяне строили каналы, дамбы и водохранилища?",["Для направления и сохранения воды, необходимой полям","Для проведения военных состязаний","Для хранения собранного зерна"],"А"],
+["Что такое шадуф?",["Орудие для уборки зерна","Устройство для подъёма воды","Приспособление для изготовления тканей"],"Б"],
+["Какие зерновые культуры выращивали египтяне?",["Кукурузу","Рис","Пшеницу","Ячмень"],"ВГ"],
+["Из какого растения египтяне изготавливали особенно ценившиеся ткани?",["Из льна","Из папируса","Из винограда"],"А"]]],
+["Государство фараонов",[
+["Какие два царства существовали до объединения Египта?",["Восточный и Западный Египет","Верхний и Нижний Египет","Приморский и Горный Египет"],"Б"],
+["Когда примерно Египет объединился в одно государство?",["Около 1600 года до н. э.","Около 300 года до н. э.","Около 3000 года до н. э."],"В"],
+["Какой город стал столицей после объединения Египта около 3000 года до н. э.?",["Мемфис","Фивы","Александрия"],"А"],
+["Что означала двойная корона фараона?",["Право управлять Египтом вместе с жрецами","Власть над Верхним и Нижним Египтом","Победу над двумя соседними народами"],"Б"],
+["Как называли правителя Древнего Египта?",["Консул","Император","Фараон"],"В"],
+["Для чего строили пирамиды?",["Для погребения фараонов","Для хранения государственных запасов зерна","Для обучения будущих писцов"],"А"],
+["Кто такие вельможи?",["Все жители египетских городов","Знатные и доверенные люди фараона","Пленные, работавшие на строительстве"],"Б"],
+["Какие обязанности выполняли писцы?",["Проводили богослужения вместо жрецов","Выбирали нового фараона","Вели учёт налогов","Вели перепись населения"],"ВГ"],
+["Что такое монархия?",["Система управления, при которой высшая власть принадлежит одному человеку и обычно передаётся по наследству","Система управления, при которой все решения принимает собрание земледельцев","Система управления, при которой правителя ежегодно выбирают писцы"],"А"],
+["Чем занимались жрецы?",["Возглавляли каждую земледельческую общину","Совершали богослужения и священные обряды","Хранили знания и вели астрономические наблюдения","Заменяли всех чиновников при сборе налогов"],"БВ"]]],
+["Усиление и ослабление Египта",[
+["Какие кочевые племена завоевали Египет в XVIII веке до н. э.?",["Персы","Хетты","Гиксосы"],"В"],
+["Какое военное преимущество было у гиксосов во время вторжения?",["Боевые колесницы, запряжённые лошадьми","Железные пушки","Боевые корабли с паровыми двигателями"],"А"],
+["Какой город стал столицей в период усиления Египта после изгнания гиксосов?",["Мемфис","Фивы","Рим"],"Б"],
+["При каком фараоне территория Египта увеличилась втрое?",["При Эхнатоне","При Хеопсе","При Тутмосе III"],"В"],
+["До какой реки в Передней Азии дошла армия Тутмоса III?",["До Евфрата","До Инда","До Дуная"],"А"],
+["С каким государством воевал Рамзес II и затем заключил мирный договор?",["С Персией","С царством хеттов","С Римом"],"Б"],
+["Когда, согласно учебнику, был заключён первый известный в истории мирный договор между египтянами и хеттами?",["Около 3000 года до н. э.","Около 1600 года до н. э.","Примерно в 1258 году до н. э."],"В"],
+["Какое изменение в религии пытался провести Эхнатон?",["Установить поклонение единому богу Атону","Запретить любые религиозные обряды","Объявить Сета единственным богом"],"А"],
+["Какое государство захватило Египет в VI веке до н. э.?",["Царство хеттов","Персия","Рим"],"Б"]]],
+["Повседневная жизнь",[
+["Какие группы составляли большинство населения Древнего Египта?",["Вельможи","Жрецы","Земледельцы","Ремесленники"],"ВГ"],
+["Какие обязанности выполняли земледельцы помимо обработки полей?",["Поддерживали оросительные системы в порядке","Участвовали в строительстве дворцов, храмов и дорог","Назначали военачальников","Проводили богослужения в главных храмах"],"АБ"],
+["Как обычно выглядел дом простого египтянина?",["Высокое каменное здание с множеством комнат","Деревянный дом с печью и крутой крышей","Небольшой глинобитный дом почти без мебели"],"В"],
+["Почему египтяне носили лёгкую одежду?",["В стране запрещали шить тёплые вещи","В Египте был жаркий климат","Ткани использовали только для украшения храмов"],"Б"],
+["Какие продукты входили в питание простых египтян?",["Пшеничные или ячменные лепёшки","Сушёная рыба","Картофель","Лук и чеснок","Шоколад"],"АБГ"],
+["Как образование могло помочь юноше из простой семьи?",["Позволяло поступить на государственную службу","Автоматически делало его фараоном","Навсегда освобождало его семью от любой работы"],"А"]]],
+["Религия",[
+["Как звали египетского бога Солнца?",["Осирис","Тот","Ра"],"В"],
+["С чем египтяне связывали бога Сета?",["С письменностью и знаниями","С пустыней и обжигающими ветрами-суховеями","С разливами Нила и орошением полей"],"Б"],
+["Кто, по верованиям египтян, судил умерших в подземном царстве?",["Осирис","Ра","Сет"],"А"],
+["Почему кошки были полезны египтянам?",["Помогали перевозить урожай","Охраняли стада от львов","Уничтожали мышей и оберегали урожай"],"В"],
+["Как выглядел сфинкс?",["Тело человека и голова сокола","Тело льва и голова человека","Тело быка и голова крокодила"],"Б"],
+["Для чего египтяне бальзамировали умерших?",["Чтобы сохранить тело для загробной жизни","Чтобы подготовить умершего к избранию правителем","Чтобы превратить тело в каменную статую"],"А"],
+["Что такое саркофаг?",["Сосуд для хранения воды","Помещение для обучения жрецов","Гроб, в который помещали мумию"],"В"]]],
+["Письменность, искусство и науки",[
+["Как назывались письменные знаки древних египтян?",["Руны","Иероглифы","Буквы кириллицы"],"Б"],
+["Из какого растения египтяне изготавливали материал для письма?",["Из папируса","Из льна","Из финиковой пальмы"],"А"],
+["Кто расшифровал древнеегипетские надписи в XIX веке?",["Геродот","Исаак Ньютон","Жан-Франсуа Шампольон"],"В"],
+["Чему прежде всего обучали детей в египетской школе?",["Чтению","Управлению боевой колесницей","Письму","Счёту","Бальзамированию"],"АВГ"],
+["Почему ученики сначала писали на черепках и старом папирусе?",["Новый папирус предназначался только для фараона","Новый папирус экономили, поскольку его изготовление требовало больших усилий и времени","На новом папирусе нельзя было писать учебные задания"],"Б"],
+["Сколько дней было в году по древнеегипетскому календарю?",["365 дней","300 дней","400 дней"],"А"],
+["Какие часы использовали египтяне?",["Механические часы с маятником","Электронные часы","Солнечные часы","Водяные часы"],"ВГ"],
+["Как бальзамирование помогло развитию медицины?",["Позволило отказаться от всех лекарств","Помогло изучить внутренние органы и строение тела","Доказало, что все болезни вызываются злыми духами"],"Б"]]]
+];
+const L="АБВГД", HOW={1:"Выбери один ответ.",2:"Выбери два ответа.",3:"Выбери три ответа."};
+const Q=[]; const form=document.getElementById("quiz");
+let n=0;
+S.forEach(([title,items])=>{
+  const h=document.createElement("h2"); h.textContent=title; form.appendChild(h);
+  items.forEach(([text,opts,ans])=>{
+    n++; const id=n, multi=ans.length>1, type=multi?"checkbox":"radio";
+    const box=document.createElement("div"); box.className="q"; box.id="q"+id;
+    box.innerHTML=`<div class="q-head"><span class="num">${id}.</span><p class="q-text"></p></div><div class="hint">${HOW[ans.length]}</div><div class="opts"></div><div class="verdict" hidden></div>`;
+    box.querySelector(".q-text").textContent=text;
+    const o=box.querySelector(".opts");
+    opts.forEach((t,i)=>{
+      const lab=document.createElement("label"); lab.className="opt";
+      lab.innerHTML=`<input type="${type}" name="q${id}" id="q${id}_${i}" value="${L[i]}"><span class="l">${L[i]})</span><span></span>`;
+      lab.lastChild.textContent=t; o.appendChild(lab);
+    });
+    form.appendChild(box); Q.push({id,ans,box,need:ans.length});
+  });
+});
+const fill=document.getElementById("fill"), count=document.getElementById("count");
+function picked(q){return [...q.box.querySelectorAll("input:checked")].map(i=>i.value).sort().join("")}
+function answered(q){return picked(q).length===q.need}
+function progress(){const a=Q.filter(q=>picked(q).length>0).length;fill.style.width=(a/Q.length*100)+"%";count.textContent=a+" из "+Q.length}
+form.addEventListener("change",e=>{
+  const inp=e.target, q=Q.find(x=>"q"+x.id===inp.name);
+  if(inp.type==="checkbox"){const ch=q.box.querySelectorAll("input:checked");if(ch.length>q.need){inp.checked=false}}
+  q.box.querySelectorAll(".opt").forEach(l=>l.classList.toggle("sel",l.querySelector("input").checked));
+  progress();
+});
+let done=false;
+const warn=document.getElementById("warn"), checkBtn=document.getElementById("check"), result=document.getElementById("result");
+checkBtn.addEventListener("click",()=>{
+  if(done){reset();return}
+  const miss=Q.filter(q=>!answered(q));
+  if(miss.length && !checkBtn.dataset.force){
+    warn.hidden=false;
+    warn.textContent="Не до конца отвечены вопросы: "+miss.map(q=>q.id).join(", ")+". Нажми ещё раз, чтобы всё равно проверить.";
+    checkBtn.dataset.force="1"; miss[0].box.scrollIntoView({behavior:"smooth",block:"center"}); return;
+  }
+  grade();
+});
+function grade(){
+  done=true; warn.hidden=true; delete checkBtn.dataset.force;
+  let score=0; const wrong=[];
+  Q.forEach(q=>{
+    const p=picked(q), ok=p===q.ans; if(ok)score++; else wrong.push(q.id);
+    q.box.classList.add("checked"); q.box.classList.toggle("no",!ok);
+    q.box.querySelectorAll(".opt").forEach(l=>{
+      const inp=l.querySelector("input"); inp.disabled=true; l.classList.remove("sel");
+      if(q.ans.includes(inp.value)) l.classList.add("right"); else if(inp.checked) l.classList.add("wrong");
+    });
+    const v=q.box.querySelector(".verdict"); v.hidden=false;
+    v.className="verdict "+(ok?"ok":"no");
+    v.textContent=ok?"Верно":"Правильный ответ: "+q.ans.split("").join(", ");
+  });
+  const who=document.getElementById("who").value.trim()||"Без имени";
+  const pct=Math.round(score/Q.length*100);
+  const summary=`Тест «Древний Египет»\n${who}: ${score} из ${Q.length} (${pct}%)`+(wrong.length?`\nОшибки в вопросах: ${wrong.join(", ")}`:"\nБез ошибок");
+  result.hidden=false;
+  result.innerHTML=`<div class="result"><span class="eyebrow">Результат</span><div class="score">${score} <small>из ${Q.length} · ${pct}%</small></div><p class="mist"></p><p>Скопируй результат и отправь его в сообщении.</p><div class="actions" style="margin-top:0"><button type="button" class="primary" id="copy">Скопировать результат</button><span class="copied" id="copied" hidden>Скопировано</span></div><textarea id="sumtext" readonly rows="3" style="font:inherit;font-size:14px;width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)" hidden></textarea></div>`;
+  result.querySelector(".mist").textContent=(who!=="Без имени"?who+". ":"")+(wrong.length?"Ошибки в вопросах: "+wrong.join(", ")+". Они отмечены красным ниже.":"Ни одной ошибки!");
+  const ta=document.getElementById("sumtext"); ta.value=summary;
+  document.getElementById("copy").addEventListener("click",()=>{
+    const okMsg=()=>{document.getElementById("copied").hidden=false};
+    try{navigator.clipboard.writeText(summary).then(okMsg,()=>{ta.hidden=false;ta.select()})}catch(e){ta.hidden=false;ta.select()}
+  });
+  checkBtn.textContent="Пройти заново"; checkBtn.className="ghost";
+  result.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function reset(){
+  done=false; result.hidden=true; result.innerHTML="";
+  Q.forEach(q=>{q.box.classList.remove("checked","no");q.box.querySelector(".verdict").hidden=true;
+    q.box.querySelectorAll(".opt").forEach(l=>{l.className="opt";const i=l.querySelector("input");i.disabled=false;i.checked=false})});
+  checkBtn.textContent="Проверить ответы"; checkBtn.className="primary"; progress();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+progress();
+</script>
+</body></html>
